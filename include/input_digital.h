@@ -1,0 +1,6 @@
+#ifndef  INPUT_DIGITAL_H
+#define  INPUT_DIGITAL_H
+
+
+
+#endif //INPUT_DIGITAL_H
