@@ -5,7 +5,7 @@
 
 void input_digital_init(void)
 {
-    rcc_periph_clock_enable(RCC_GPIOA);
+    // rcc_periph_clock_enable(RCC_GPIOA);
 
     // Setup button pins as inputs with pull down resistors:
     // gpio_set_mode(GPIOA, GPIO_MODE_INPUT, GPIO_CNF_INPUT_FLOAT, GPIO0); // use external pull down
