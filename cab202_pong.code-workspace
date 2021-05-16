@@ -1,18 +1,8 @@
 {
 	"folders": [
 		{
-			"path": ".."
-		},
-		{
-			"name": "cab202_pong",
 			"path": "."
 		}
 	],
-	"settings": {
-		"files.associations": {
-			"gpio.h": "c",
-			"usart.h": "c",
-			"usart_common_f124.h": "c"
-		}
-	}
+	"settings": {}
 }
