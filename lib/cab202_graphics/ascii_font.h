@@ -2,19 +2,26 @@
  *  CAB202 Teensy Library (cab202_teensy)
  *  ascii_font.h
  *
- *  Last modified Luis Mejias, 21/04/2021 12:34:56 AM
+ *  Luis Mejias, 21/04/2021 12:34:56 AM, original author
+ *  Last modified Zacharia Henderson, 17/05/2021 11:18 AM
  *
  */
 #ifndef ASCIIFONT_H_
 #define ASCIIFONT_H_
 
+#ifdef ENV_AVR
 #include <avr/pgmspace.h>
+#endif
 
 #define CHAR_WIDTH 5
 #define CHAR_HEIGHT 8
 
 // Store this in PROGMEM so that we don't waste RAM on a large static variable
+#ifdef ENV_AVR
 static const unsigned char ASCII[][CHAR_WIDTH] PROGMEM =
+#elif  ENV_ARM
+static const unsigned char ASCII[][CHAR_WIDTH] =
+#endif
 {
  {0x00, 0x00, 0x00, 0x00, 0x00} // 20
 ,{0x00, 0x00, 0x5f, 0x00, 0x00} // 21 !

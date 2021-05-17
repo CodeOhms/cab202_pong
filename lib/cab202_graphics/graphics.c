@@ -4,15 +4,17 @@
 **
 **	B.Talbot, September 2015
 **	L.Buckingham, September 2017
-**  Last modified Luis Mejias, 21/04/2021 12:34:56 AM
+**  Luis Mejias, 21/04/2021 12:34:56 AM
+**  Last modified Zacharia Henderson, 17/05/2021 6:30 PM
 **	Queensland University of Technology
 **
 **	Revisions:
 **	2017-10-11 - Changed screen coordinates to int from uint8_t. LB.
 */
-#include <avr/pgmspace.h>
+// #include <avr/pgmspace.h>
 #include <stdint.h>
 
+#include "flash_mem.h"
 #include "graphics.h"
 #include "macros.h"
 
@@ -144,7 +146,8 @@ void draw_char(int top_left_x, int top_left_y, char character, colour_t colour) 
 	// loop through each pixel in the character array and plot each one individually
 	// TODO: This can be done more efficiently by careful bit-masking.
 	for ( uint8_t i = 0; i < CHAR_WIDTH; i++ ) {
-		uint8_t pixel_data = pgm_read_byte(&(ASCII[character - 0x20][i]));
+		// uint8_t pixel_data = pgm_read_byte(&(ASCII[character - 0x20][i]));
+		uint8_t pixel_data = flash_mem_read_byte((uint32_t*) &(ASCII[character - 0x20][i]));
 
 		if ( colour == BG_COLOUR ) {
 			pixel_data = ~pixel_data;

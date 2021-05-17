@@ -38,7 +38,7 @@ void timing_init(uint8_t num_overflow_counters, double* time_limits,
         _overflow_counters[i] = 0;
 
     // Convert time limits, in ms, to ticks:
-        double prescaler_number = (double) timing_get_prescaler();
+        // double prescaler_number = (double) timing_get_prescaler();
         // _time_limits[i] = time_to_ticks(time_limits[i], prescaler_number);
         _time_limits[i] = time_to_ticks(time_limits[i]);
     }

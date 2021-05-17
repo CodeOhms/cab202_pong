@@ -6,6 +6,9 @@
 #include "peripherals_control.h"
 #include "input_digital.h"
 #include "timing.h"
+// CAB202 libraries
+#include <lcd.h>
+#include <graphics.h>
 
 #define RCCLEDPORT (RCC_GPIOC)
 #define LEDPORT (GPIOC)
@@ -33,7 +36,7 @@ void blink(void)
 	if(button_history == button_mask)
 	{
 		// button_is_pressed = 1;
-		gpio_clear(GPIOC, GPIO13); // builtin LED is tied to Vcc, inversed logic.
+		gpio_clear(GPIOC, GPIO13); // builtin LED is tied to Vcc, inversed logic
 	}
 	else if(button_history == 0)
 	{
@@ -54,6 +57,12 @@ int main(void)
 	led_setup();
     input_digital_init();
     timing_init(1, time_limits, timed_funcs, timed_funcs_en);
+	// Setup LCD:
+	lcd_init(LCD_LOW_CONTRAST);
+	clear_screen();
+	char s[] = "Hello world!";
+	draw_string(0, 10, s, FG_COLOUR);
+	show_screen();
 	while(1)
     {
     // Read input:

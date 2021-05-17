@@ -4,7 +4,7 @@
  *
  *	Michael, 32/13/2015 12:34:56 AM
  *  Modified: B.Talbot, April 2016
-*  Last modified Luis Mejias, 21/04/2021 12:34:56 AM
+ *  Last modified Luis Mejias, 21/04/2021 12:34:56 AM
  *  Queensland University of Technology
  */
 #ifndef LCD_H_
@@ -12,14 +12,20 @@
 
 #include <stdint.h>
 
-// What pins did we connect D/C and RST to
-#define DCPIN		5   // PORTD
-#define RSTPIN		6   // PORTD
+#ifdef ENV_AVR
+#include "lcd_avr.h"
+#elif ENV_ARM
+#include "lcd_arm.h"
+#endif
 
-// What pins are the SPI lines on
-#define DINPIN		4   // PORTD
-#define SCKPIN		3   // PORTD
-#define SCEPIN		7   // PORTD
+// What pins did we connect D/C and RST to
+// #define DCPIN		5   // PORTD
+// #define RSTPIN		6   // PORTD
+
+// // What pins are the SPI lines on
+// #define DINPIN		4   // PORTD
+// #define SCKPIN		3   // PORTD
+// #define SCEPIN		7   // PORTD
 
 // LCD Command and Data
 #define LCD_C		0
