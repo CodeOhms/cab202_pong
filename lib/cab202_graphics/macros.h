@@ -22,7 +22,7 @@
 #define SET_OUTPUT(portddr, pin)		(portddr) |= (1 << (pin))
 #else // ENV_ARM is true
 #define SET_INPUT(portddr, pin)			gpio_set_mode(portddr, GPIO_MODE_INPUT, GPIO_CNF_INPUT_FLOAT, pin)
-#define SET_OUTPUT(portddr, pin)		gpio_set_mode(portddr, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_OPENDRAIN, pin)
+#define SET_OUTPUT(portddr, pin)		gpio_set_mode(portddr, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, pin)
 #endif
 
 /*

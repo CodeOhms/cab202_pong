@@ -148,6 +148,7 @@ void draw_char(int top_left_x, int top_left_y, char character, colour_t colour) 
 	for ( uint8_t i = 0; i < CHAR_WIDTH; i++ ) {
 		// uint8_t pixel_data = pgm_read_byte(&(ASCII[character - 0x20][i]));
 		uint8_t pixel_data = flash_mem_read_byte((uint32_t*) &(ASCII[character - 0x20][i]));
+		// uint8_t pixel_data = ASCII[character - 0x20][i];
 
 		if ( colour == BG_COLOUR ) {
 			pixel_data = ~pixel_data;
