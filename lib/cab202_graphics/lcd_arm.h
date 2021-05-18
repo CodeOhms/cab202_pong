@@ -13,8 +13,8 @@
 #define RSTPIN_DDRD RSTPIN_PORT
 
 // What pins are the SPI lines on
-#define DINPIN		4   // PORTA
-#define SCKPIN		5   // PORTA
+#define DINPIN		3   // PORTA
+#define SCKPIN		4   // PORTA
 #define SCEPIN		1   // PORTA
 #define DINPIN_PORT GPIOA
 #define SCKPIN_PORT GPIOA
