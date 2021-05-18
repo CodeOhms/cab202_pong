@@ -63,10 +63,10 @@ int main(void)
     input_digital_init();
     timing_init(1, time_limits, timed_funcs, timed_funcs_en);
 	// Setup LCD:
-	lcd_init(LCD_LOW_CONTRAST);
+	lcd_init(LCD_DEFAULT_CONTRAST);
 	clear_screen();
 	char s[] = "Hello world!";
-	draw_string(0, 10, s, FG_COLOUR);
+	draw_string(0, 0, s, FG_COLOUR);
 	show_screen();
 	while(1)
     {
