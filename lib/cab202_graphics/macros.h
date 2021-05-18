@@ -22,7 +22,7 @@
 #define SET_OUTPUT(portddr, pin)		(portddr) |= (1 << (pin))
 #else // ENV_ARM is true
 #define SET_INPUT(portddr, pin)			gpio_set_mode(portddr, GPIO_MODE_INPUT, GPIO_CNF_INPUT_FLOAT, pin)
-#define SET_OUTPUT(portddr, pin)		gpio_set_mode(portddr, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, pin)
+#define SET_OUTPUT(portddr, pin)		gpio_set_mode(portddr, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_OPENDRAIN, pin)
 #endif
 
 /*
@@ -41,9 +41,7 @@
 #define SET_BIT(reg, pin)			gpio_set(reg, pin)
 #define CLEAR_BIT(reg, pin)			gpio_clear(reg, pin)
 // If setting bit, don't shift, but shift left if clearing bit. See manual for more
-#define WRITE_BIT(reg, pin, value)	{\
-    GPIO_BSRR(reg) = ((1<<pin) << (value==1 ? 0 : 16));\
-}
+#define WRITE_BIT(reg, pin, value)	value==1 ? SET_BIT(reg, pin) : CLEAR_BIT(reg, pin)
 #define BIT_VALUE(reg, pin)			gpio_get(reg, pin)
 #define BIT_IS_SET(reg, pin)		(BIT_VALUE((reg),(pin))==1)
 #endif

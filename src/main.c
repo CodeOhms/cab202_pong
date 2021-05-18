@@ -11,8 +11,8 @@
 #include <graphics.h>
 
 #define RCCLEDPORT (RCC_GPIOA)
-#define LEDPORT (GPIOA)
-#define LEDPIN (GPIO5)
+#define LEDPORT (GPIOB)
+#define LEDPIN (GPIO12)
 #define GPIO_MODE_OUTPUT GPIO_MODE_OUTPUT_2_MHZ
 #define GPIO_PUPD_NONE GPIO_CNF_OUTPUT_PUSHPULL
 
@@ -25,23 +25,28 @@ static void led_setup(void)
 #endif
 }
 
+// #define SET_BIT(reg, pin)			gpio_set(reg, pin)
+// #define CLEAR_BIT(reg, pin)			gpio_clear(reg, pin)
+// #define WRITE_BIT(reg, pin, value)	value==1 ? SET_BIT(reg, pin) : CLEAR_BIT(reg, pin)
 void blink(void);
 void blink(void)
 {
 	static uint8_t button_history = 0;
 	// static uint8_t button_is_pressed = 0;
 	const uint8_t button_mask = 0b11111; // retain 5 most recent samples of button state
-	uint8_t button_current_state = gpio_get(GPIOB, GPIO12);
+	uint8_t button_current_state = gpio_get(GPIOA, GPIO0);
 	button_history = ((button_history<<1) & button_mask) | button_current_state;
 	if(button_history == button_mask)
 	{
 		// button_is_pressed = 1;
-		gpio_clear(GPIOA, GPIO5); // builtin LED is tied to Vcc, inversed logic
+		gpio_clear(LEDPORT, LEDPIN); // builtin LED is tied to Vcc, inversed logic
+		// WRITE_BIT(LEDPORT, LEDPIN, 0);
 	}
 	else if(button_history == 0)
 	{
 		// button_is_pressed = 0;
-		gpio_set(GPIOA, GPIO5);
+		gpio_set(LEDPORT, LEDPIN);
+		// WRITE_BIT(LEDPORT, LEDPIN, 1);
 	}
 }
 
@@ -58,11 +63,11 @@ int main(void)
     input_digital_init();
     timing_init(1, time_limits, timed_funcs, timed_funcs_en);
 	// Setup LCD:
-	// lcd_init(LCD_LOW_CONTRAST);
-	// clear_screen();
-	// char s[] = "Hello world!";
-	// draw_string(0, 10, s, FG_COLOUR);
-	// show_screen();
+	lcd_init(LCD_LOW_CONTRAST);
+	clear_screen();
+	char s[] = "Hello world!";
+	draw_string(0, 10, s, FG_COLOUR);
+	show_screen();
 	while(1)
     {
     // Read input:
