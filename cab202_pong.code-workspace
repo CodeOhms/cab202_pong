@@ -9,7 +9,8 @@
 			"timer.h": "c",
 			"gpio.h": "c",
 			"common.h": "c",
-			"gpio_common_all.h": "c"
+			"gpio_common_all.h": "c",
+			"stdio.h": "c"
 		}
 	}
 }

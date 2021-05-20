@@ -5,6 +5,7 @@
 #include "libopencm3/input_analogue_libopencm3.h"
 #endif //ARM
 
-#define ADC_CHANNELS_NUM 1
+#define JOYSTICKS 1
+#define ADC_BUFF_SIZE (JOYSTICKS * 2)
 
 #endif //INPUT_ANALOGUE_H

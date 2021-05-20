@@ -12,4 +12,6 @@ void peripherals_control_init(void)
     rcc_periph_clock_enable(RCC_GPIOB);
         // Enable clock for timer 2:
     RCC_APB1ENR |= RCC_APB1ENR_TIM2EN;
+
+    
 }

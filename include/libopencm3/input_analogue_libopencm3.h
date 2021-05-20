@@ -10,4 +10,8 @@
 
 void input_analogue_init(void);
 
+void input_analogue_enable_reading(void);
+
+void input_analogue_read(uint16_t* joystick_readings);
+
 #endif //INPUT_ANALOGUE_LIBOPENCM3_H
