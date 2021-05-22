@@ -12,9 +12,9 @@
 #include <lcd.h>
 #include <graphics.h>
 
-#define RCCLEDPORT (RCC_GPIOA)
+#define RCCLEDPORT (RCC_GPIOB)
 #define LEDPORT (GPIOB)
-#define LEDPIN (GPIO12)
+#define LEDPIN (GPIO15)
 #define GPIO_MODE_OUTPUT GPIO_MODE_OUTPUT_2_MHZ
 #define GPIO_PUPD_NONE GPIO_CNF_OUTPUT_PUSHPULL
 
@@ -77,20 +77,25 @@ int main(void)
     {
     // Read input:
         // Buttons (digital):
-	button_states = input_digital_read();
+		button_states = input_digital_read();
 
-        // Joysticks (analogue):
-	input_analogue_read(joysticks);
+			// Joysticks (analogue):
+		input_analogue_read(joysticks);
 
-    // Interpret input:
-	char js_r[30];
-	sprintf(js_r, "Joystick 1 = %i", joysticks[0]);
-	draw_string(0, 10, js_r, FG_COLOUR);
-	show_screen();
+		// Interpret input:
+		char js_r[30];
+		// double inputVoltage = ((double) joysticks[0]) / 4096 * 3.3;
+		// sprintf(js_r, "Joystick 1 = %i", (uint8_t) inputVoltage);
+		sprintf(js_r, "Joystick 1 = %i", joysticks[0]);
+		clear_screen();
+		draw_string(0, 10, js_r, FG_COLOUR);
+		for (int i = 0; i < 9000000; i++)
+			{ __asm__("nop"); }
+		show_screen();
 
-    // Update entity models:
+		// Update entity models:
 
-    // Update the screen:
+		// Update the screen:
     
     }
 

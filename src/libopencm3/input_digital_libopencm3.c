@@ -4,7 +4,7 @@
 #include "input_digital.h"
 
 #define LEDPORT (GPIOB)
-#define LEDPIN (GPIO12)
+#define LEDPIN (GPIO15)
 
 uint8_t _button_is_pressed = 0;
 
