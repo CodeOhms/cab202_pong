@@ -44,6 +44,11 @@ void timing_init(uint8_t num_overflow_counters, double* time_limits,
     }
 }
 
+void timing_reset_overflow_counter(uint8_t overflow_counter_index)
+{
+    _overflow_counters[overflow_counter_index] = 0;
+}
+
 // uint32_t time_to_ticks(double time_ms, double timer_prescaler)
 // {
 //     // Convert the milliseconds to seconds in formula!

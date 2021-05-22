@@ -10,7 +10,10 @@
 			"gpio.h": "c",
 			"common.h": "c",
 			"gpio_common_all.h": "c",
-			"stdio.h": "c"
+			"stdio.h": "c",
+			"input_digital.h": "c",
+			"graphics.h": "c",
+			"lcd.h": "c"
 		}
 	}
 }

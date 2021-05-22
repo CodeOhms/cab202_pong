@@ -13,6 +13,8 @@ void timing_init(uint8_t num_overflow_counters, double* time_limits,
 				 func_ptr_min_t* timer_user_functions,
 				 uint8_t* user_functions_enabled);
 
+void timing_reset_overflow_counter(uint8_t overfow_counter_index);
+
 // uint32_t time_to_ticks(double time_ms, double timer_prescaler);
 // double ticks_to_time_8bit(double timer_prescaler, uint8_t* tick_count_reg, uint32_t overflow_count);
 // double ticks_to_time_16bit(double timer_prescaler, uint32_t* tick_count_reg, uint32_t overflow_count);

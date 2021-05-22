@@ -3,14 +3,15 @@
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/timer.h>
+// CAB202 libraries
+#include <lcd.h>
+#include <graphics.h>
 
 #include "peripherals_control.h"
 #include "input_digital.h"
 #include "input_analogue.h"
 #include "timing.h"
-// CAB202 libraries
-#include <lcd.h>
-#include <graphics.h>
+#include "pong.h"
 
 #define RCCLEDPORT (RCC_GPIOB)
 #define LEDPORT (GPIOB)
@@ -70,34 +71,35 @@ int main(void)
 	// Setup LCD:
 	lcd_init(LCD_DEFAULT_CONTRAST);
 	clear_screen();
-	char s[] = "Hello world!";
-	draw_string(0, 0, s, FG_COLOUR);
-	show_screen();
-	while(1)
-    {
-    // Read input:
-        // Buttons (digital):
-		button_states = input_digital_read();
+	// char s[] = "Hello world!";
+	// draw_string(0, 0, s, FG_COLOUR);
+	// show_screen();
+	// while(1)
+    // {
+    // // Read input:
+    //     // Buttons (digital):
+	// 	button_states = input_digital_read();
 
-			// Joysticks (analogue):
-		input_analogue_read(joysticks);
+	// 		// Joysticks (analogue):
+	// 	input_analogue_read(joysticks);
 
-		// Interpret input:
-		char js_r[30];
-		// double inputVoltage = ((double) joysticks[0]) / 4096 * 3.3;
-		// sprintf(js_r, "Joystick 1 = %i", (uint8_t) inputVoltage);
-		sprintf(js_r, "Joystick 1 = %i", joysticks[0]);
-		clear_screen();
-		draw_string(0, 10, js_r, FG_COLOUR);
-		for (int i = 0; i < 9000000; i++)
-			{ __asm__("nop"); }
-		show_screen();
+	// 	// Interpret input:
+	// 	char js_r[30];
+	// 	// double inputVoltage = ((double) joysticks[0]) / 4096 * 3.3;
+	// 	// sprintf(js_r, "Joystick 1 = %i", (uint8_t) inputVoltage);
+	// 	sprintf(js_r, "Joystick 1 = %i", joysticks[0]);
+	// 	clear_screen();
+	// 	draw_string(0, 10, js_r, FG_COLOUR);
+	// 	for (int i = 0; i < 9000000; i++)
+	// 		{ __asm__("nop"); }
+	// 	show_screen();
 
-		// Update entity models:
+	// 	// Update entity models:
 
-		// Update the screen:
+	// 	// Update the screen:
     
-    }
+    // }
+	pong();
 
     // Only return if restarting.
         // Call shutdown functions:

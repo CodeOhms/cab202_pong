@@ -33,6 +33,9 @@ void input_digital_button_debounce(void)
 		_button_is_pressed = 0;
         gpio_set(LEDPORT, LEDPIN);
 	}
+
+	// Clear overflow counter for timer:
+	timing_reset_overflow_counter(0);
 }
 
 uint8_t input_digital_read(void)
