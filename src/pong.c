@@ -89,7 +89,7 @@ void pong_init(void)
 
 
         // Paddles:
-    positions[1].x = 1;
+    positions[1].x = 0;
     positions[1].y = 20;
     positions_next[1].x = 0;
     positions_next[1].y = 20;
@@ -128,6 +128,17 @@ collision_dim_t collision_w_bound(uint8_t collider_index)
     return collision_none;
 }
 
+collision_dim_t collision_w_paddle_y(position_t pad_y_next, position_t coll_y_next, dimension_t pad_len, dimension_t coll_len)
+{
+    // Will the paddle move to intersect between the current and predicted y coordinates of the colliding object?:
+    if(pad_y_next <= coll_y_next && (coll_y_next + coll_len) <= (pad_y_next + pad_len))
+    { // The colliding object either hit the paddle or its predicted next position went through it:
+        return collision_x;
+    }
+
+    return collision_none;
+}
+
 collision_dim_t collision_w_paddle(uint8_t paddle_index, uint8_t collider_index)
 {
     // Positions:
@@ -145,12 +156,18 @@ collision_dim_t collision_w_paddle(uint8_t paddle_index, uint8_t collider_index)
     dimension_t coll_len = object_dimensions[collider_index].y;
 
     // Check if colliding object will cross paths with the paddle:
-    if(coll_x < pad_x)
-    {
-        // Will the paddle move to intersect between the current and predicted y coordinates of the colliding object?:
-        if(pad_y_next <= coll_y_next && (coll_y_next + coll_len) <= (pad_y_next + pad_len))
-        { // The colliding object either hit the paddle or its predicted next position went through it:
-            return collision_x;
+    if(pad_x == 0)
+    { // Left paddle
+        if(coll_x <= pad_x)
+        {
+            return collision_w_paddle_y(pad_y_next, coll_y_next, pad_len, coll_len);
+        }
+    }
+    else if(pad_x == bounds.x)
+    { // Right paddle
+        if(coll_x + coll_width >= pad_x)
+        {
+            return collision_w_paddle_y(pad_y_next, coll_y_next, pad_len, coll_len);
         }
     }
 
