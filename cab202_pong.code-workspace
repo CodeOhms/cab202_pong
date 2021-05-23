@@ -13,7 +13,9 @@
 			"stdio.h": "c",
 			"input_digital.h": "c",
 			"graphics.h": "c",
-			"lcd.h": "c"
+			"lcd.h": "c",
+			"pong.h": "c",
+			"pong_common.h": "c"
 		}
 	}
 }

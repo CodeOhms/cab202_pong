@@ -12,15 +12,17 @@
 #define CANVAS_X LCD_X
 #define CANVAS_Y LCD_Y
 #define BALL_SPEED 1
+#define PADDLE_MAX_SPEED 40
 
 typedef uint16_t game_tick_t;
 typedef double position_t;
 // typedef int8_t dposition_t;
 typedef int8_t velocity_t;
+typedef uint8_t dimension_t;
 typedef struct dimensions
 {
-    uint8_t x;
-    uint8_t y;
+    dimension_t x;
+    dimension_t y;
 } dimensions_t;
 typedef struct positions
 {
@@ -50,6 +52,6 @@ void canvas_update_all(void);
 
 void draw_paddle(position_t x, position_t y, position_t x_next, position_t y_next);
 
-void draw_ball(position_t x, position_t y, position_t x_next, position_t y_next);
+void draw_ball(position_t x, position_t y, dimensions_t ball_dims);
 
 #endif //PONG_COMMON_H

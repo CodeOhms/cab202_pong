@@ -22,7 +22,6 @@ velocities_t* velocities;
 // Arrays containing dimensions of objects:
 dimensions_t* object_dimensions;
 // Timing variables:
-game_tick_t dtick;
 double dt;
 // Objects:
 uint8_t objects_num;
@@ -30,39 +29,78 @@ dimensions_t bounds;
 
 void pong_init(void)
 {
-    // Set paddle dimensions:
+    dt = 0;
 
     bounds.x = CANVAS_X;
     bounds.y = CANVAS_Y;
 
-    dtick = 0;
-    dt = 0;
-}
-
-void pong_setup_single_player(void)
-{
-    objects_num = 2;
-
+    objects_num = 3;
     positions = malloc(sizeof(positions_t) * objects_num);
     velocities = malloc(sizeof(positions_t) * objects_num);
     positions_next = malloc(sizeof(positions_t) * objects_num);
     velocities = malloc(sizeof(velocities_t) * objects_num);
     object_dimensions = malloc(sizeof(dimensions_t) * objects_num);
 
-    // Player paddles:
-    positions[1].x = 0;
+    // Dimensions, 0 to 255 where 0 is 1 px:
+        // Ball:
+    object_dimensions[0].x = 3;
+    object_dimensions[0].y = 3;
+        // Paddle:
+    object_dimensions[1].x = 1;
+    object_dimensions[1].y = 17; // 20 px
+
+    // Initial positions:
+        // Ball:
+    positions[0].x = CANVAS_X / 2;
+    positions[0].y = CANVAS_Y / 2;
+    positions_next[0].x = CANVAS_X / 2;
+    positions_next[0].y = CANVAS_Y / 2;
+
+    // Initial velocities:
+        // Ball:
+    {
+        int signx = 0;
+        int signy = 0;
+        while(1)
+        {
+            srand(joysticks[0]);
+            const int upper = 1;
+            const int lower = -1;
+            if(signx == 0)
+            {
+                signx = (rand() % (upper - lower + 1)) + lower;
+            }
+            if(signy == 0)
+            {
+                signy = (rand() % (upper - lower + 1)) + lower;
+            }
+            if(signx != 0 && signy != 0)
+            {
+                break;
+            }
+        }
+        velocities[0].dx = signx * 20;
+        velocities[0].dy = signy * 20;
+    }
+    // positions[0].y = 2;
+    // positions_next[0].y = 2;
+    // velocities[0].dx = 0;
+    // velocities[0].dy = 50;
+
+
+        // Paddles:
+    positions[1].x = 1;
     positions[1].y = 20;
     positions_next[1].x = 0;
     positions_next[1].y = 20;
     velocities[1].dx = 0;
     velocities[1].dy = 0;
-    object_dimensions[1].x = 0;
-    object_dimensions[1].y = 20;
-
-    // Ping pong ball:
 }
 
-// void pong_single_player(void);
+void pong_setup_single_player(void)
+{
+    objects_num = 2;
+}
 
 /*
  * Functions to check for collisions:
@@ -77,7 +115,7 @@ collision_dim_t collision_w_bound(uint8_t collider_index)
     uint8_t coll_len = object_dimensions[collider_index].y;
 
     // Left or right bound collision:
-    if(x_next < 0.0 || x_next + coll_width > bounds.x)
+    if(x_next < 0 || x_next + coll_width > bounds.x)
     {
         return collision_x;
     }
@@ -93,22 +131,24 @@ collision_dim_t collision_w_bound(uint8_t collider_index)
 collision_dim_t collision_w_paddle(uint8_t paddle_index, uint8_t collider_index)
 {
     // Positions:
-    int coll_x = positions[collider_index].x;
-    int coll_y = positions[collider_index].y;
-    int pad_x = positions[paddle_index].x;
-    int pad_y = positions[paddle_index].y;
-    int coll_x_next = positions_next[collider_index].x;
-    int coll_y_next = positions_next[collider_index].y;
+    position_t coll_x = positions[collider_index].x;
+    position_t coll_y = positions[collider_index].y;
+    position_t pad_x = positions[paddle_index].x;
+    position_t pad_y = positions[paddle_index].y;
+    position_t coll_x_next = positions_next[collider_index].x;
+    position_t coll_y_next = positions_next[collider_index].y;
     // Paddle constrained along the x axis.
     int pad_y_next = positions_next[paddle_index].y;
     // Dimensions:
-    uint8_t pad_len = object_dimensions[paddle_index].y;
+    dimension_t pad_len = object_dimensions[paddle_index].y;
+    dimension_t coll_width = object_dimensions[paddle_index].x;
+    dimension_t coll_len = object_dimensions[collider_index].y;
 
     // Check if colliding object will cross paths with the paddle:
-    if(coll_x_next <= pad_x || coll_x_next >= pad_x)
+    if(coll_x < pad_x)
     {
         // Will the paddle move to intersect between the current and predicted y coordinates of the colliding object?:
-        if(pad_y_next >= coll_y && pad_y_next + pad_len >= coll_y_next)
+        if(pad_y_next <= coll_y_next && (coll_y_next + coll_len) <= (pad_y_next + pad_len))
         { // The colliding object either hit the paddle or its predicted next position went through it:
             return collision_x;
         }
@@ -134,11 +174,6 @@ void paddle_bound_collision(uint8_t paddle_index)
     velocities[paddle_index].dy = 0;
 }
 
-void paddle_continue(uint8_t paddle_index)
-{
-
-}
-
 void ball_bound_collision_y()
 {
     // Invert the y velocity:
@@ -151,11 +186,6 @@ void ball_paddle_collision()
     velocities[0].dx = velocities[0].dx * -1;
 }
 
-void ball_continue()
-{
-
-}
-
 void pong(void)
 {
     pong_init();
@@ -166,7 +196,6 @@ void pong(void)
         canvas_clear();
 
     // Get time since last game tick:
-        dtick = get_elapsed_game_ticks();
         dt = get_elapsed_game_time();
 
     // Read input:
@@ -183,11 +212,11 @@ void pong(void)
         }
         if(joysticks[0] > 2048 + J1_DEADZONE)
         { // Down
-            velocities[1].dy = 20;
+            velocities[1].dy = PADDLE_MAX_SPEED;
         }
         else if(joysticks[0] < 2048 - J1_DEADZONE)
         { // Up
-            velocities[1].dy = -20;
+            velocities[1].dy = -PADDLE_MAX_SPEED;
         }
 
     // Update entity models:
@@ -212,7 +241,18 @@ void pong(void)
                     paddle_bound_collision(pad);
                     break;
                 case collision_none:
-                    paddle_continue(pad);
+                    break;
+            }
+        }
+
+        // Ball paddle collisions:
+        for(uint8_t pad = 1; pad < objects_num; ++pad)
+        {
+            dimension_of_collision = collision_w_paddle(pad, 0);
+            switch(dimension_of_collision)
+            {
+                case collision_x:
+                    ball_paddle_collision();
                     break;
             }
         }
@@ -225,15 +265,14 @@ void pong(void)
                 break;
                 
             case collision_none:
-                ball_continue();
                 break;
         }
 
     // Update the screen:
+        draw_ball(positions_next[0].x , positions_next[0].y, object_dimensions[0]);
         draw_paddle(positions_next[1].x, positions_next[1].y, positions_next[1].x, positions_next[1].y + object_dimensions[1].y);
         canvas_update_all();
-        // for (int i = 0; i < 9000000; i++)
-		// 	{ __asm__("nop"); }
+        // draw_ball(positions_next[0].x , positions_next[0].y);
         
     // Set the current position to the next position that was calculated:
         for(uint8_t obj = 0; obj < objects_num; ++obj)
