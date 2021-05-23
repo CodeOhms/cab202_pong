@@ -6,6 +6,7 @@
 #endif //ARM
 
 #define JOYSTICKS 1
+#define J1_DEADZONE 50
 #define ADC_BUFF_SIZE (JOYSTICKS * 2)
 
 #endif //INPUT_ANALOGUE_H

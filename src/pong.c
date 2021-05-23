@@ -176,12 +176,17 @@ void pong(void)
         input_analogue_read(joysticks);
 
     // Interpret input, translating joystick movement to direction and intensity:
-        if(joysticks[0] > 3000)
-        {
+        // Joystick:
+        if(ABS(joysticks[0] - 2048) <= J1_DEADZONE)
+        { // Middle
+            velocities[1].dy = 0;
+        }
+        if(joysticks[0] > 2048 + J1_DEADZONE)
+        { // Down
             velocities[1].dy = 20;
         }
-        else if(joysticks[0] < 1000)
-        {
+        else if(joysticks[0] < 2048 - J1_DEADZONE)
+        { // Up
             velocities[1].dy = -20;
         }
 
