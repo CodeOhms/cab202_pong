@@ -7,25 +7,42 @@
 
 #include "common.h"
 #include "timing.h"
+#include "input_analogue.h"
 
 #define CANVAS_X LCD_X
 #define CANVAS_Y LCD_Y
 #define BALL_SPEED 1
 
+typedef uint16_t game_tick_t;
+typedef double position_t;
+// typedef int8_t dposition_t;
+typedef int8_t velocity_t;
 typedef struct dimensions
 {
     uint8_t x;
     uint8_t y;
 } dimensions_t;
+typedef struct positions
+{
+    position_t x;
+    position_t y;
+} positions_t;
+// typedef struct dpositions
+// {
+//     dposition_t dx;
+//     dposition_t dy;
+// } dpositions_t;
+typedef struct velocities
+{
+    velocity_t dx;
+    velocity_t dy;
+} velocities_t;
 typedef enum collsion_dim
 {
     collision_x,
     collision_y,
     collision_none
 } collision_dim_t;
-typedef uint16_t game_tick_t;
-typedef uint16_t position_t;
-typedef uint16_t velocity_t;
 
 void canvas_clear(void);
 

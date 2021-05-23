@@ -54,7 +54,7 @@ int main(void)
 {
 	// Setup data:
 		// Game data:
-	uint16_t joysticks[JOYSTICKS];
+	// uint16_t joysticks[JOYSTICKS];
 	uint8_t button_states = 0;
 		// Hardware data:
 	double time_limits[] = { 0 };
