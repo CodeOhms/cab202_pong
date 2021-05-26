@@ -120,7 +120,7 @@ collision_dim_t collision_w_bound(uint8_t collider_index)
         return collision_x;
     }
     // Top or bottom collision:
-    if(y_next < 0 || y_next + object_dimensions[collider_index].y > bounds.y)
+    if(y_next < 0 || y_next + coll_len > bounds.y)
     {
         return collision_y;
     }
@@ -141,6 +141,7 @@ collision_dim_t collision_w_paddle_y(position_t pad_y_next, position_t coll_y_ne
 
 collision_dim_t collision_w_paddle(uint8_t paddle_index, uint8_t collider_index)
 {
+    // Paddle constrained along the x axis, so no movement in the x direction!
     // Positions:
     position_t coll_x = positions[collider_index].x;
     position_t coll_y = positions[collider_index].y;
@@ -148,7 +149,6 @@ collision_dim_t collision_w_paddle(uint8_t paddle_index, uint8_t collider_index)
     position_t pad_y = positions[paddle_index].y;
     position_t coll_x_next = positions_next[collider_index].x;
     position_t coll_y_next = positions_next[collider_index].y;
-    // Paddle constrained along the x axis.
     int pad_y_next = positions_next[paddle_index].y;
     // Dimensions:
     dimension_t pad_len = object_dimensions[paddle_index].y;
@@ -158,14 +158,14 @@ collision_dim_t collision_w_paddle(uint8_t paddle_index, uint8_t collider_index)
     // Check if colliding object will cross paths with the paddle:
     if(pad_x == 0)
     { // Left paddle
-        if(coll_x <= pad_x)
+        if(coll_x_next <= pad_x)
         {
             return collision_w_paddle_y(pad_y_next, coll_y_next, pad_len, coll_len);
         }
     }
     else if(pad_x == bounds.x)
     { // Right paddle
-        if(coll_x + coll_width >= pad_x)
+        if(coll_x_next + coll_width >= pad_x)
         {
             return collision_w_paddle_y(pad_y_next, coll_y_next, pad_len, coll_len);
         }
@@ -197,10 +197,21 @@ void ball_bound_collision_y()
     velocities[0].dy = velocities[0].dy * -1;
 }
 
-void ball_paddle_collision()
+void ball_paddle_collision(uint8_t paddle_index)
 {
     // Invert the x velocity:
     velocities[0].dx = velocities[0].dx * -1;
+
+    // Reflect the x direction overshoot to prevent the ball sticking to the paddle:
+    if(positions[paddle_index].x == 0)
+    { // Left paddle
+        positions_next[0].x = positions_next[0].x * -1;
+    }
+    else if(positions[paddle_index].y == bounds.y)
+    { // Right paddle
+        // positions[0].x = bounds.y - (positions[0].x - bounds.y);
+        positions_next[0].x = 2*bounds.y - positions_next[0].x;
+    }
 }
 
 void pong(void)
@@ -269,7 +280,7 @@ void pong(void)
             switch(dimension_of_collision)
             {
                 case collision_x:
-                    ball_paddle_collision();
+                    ball_paddle_collision(pad);
                     break;
             }
         }
