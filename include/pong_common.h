@@ -19,12 +19,12 @@ typedef double position_t;
 // typedef int8_t dposition_t;
 typedef int8_t velocity_t;
 typedef uint8_t dimension_t;
-typedef struct dimensions
+typedef struct dimensions_t
 {
     dimension_t x;
     dimension_t y;
 } dimensions_t;
-typedef struct positions
+typedef struct positions_t
 {
     position_t x;
     position_t y;
@@ -34,12 +34,12 @@ typedef struct positions
 //     dposition_t dx;
 //     dposition_t dy;
 // } dpositions_t;
-typedef struct velocities
+typedef struct velocities_t
 {
     velocity_t dx;
     velocity_t dy;
 } velocities_t;
-typedef enum collsion_dim
+typedef enum collision_dim_t
 {
     collision_x,
     collision_y,
