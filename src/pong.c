@@ -26,6 +26,7 @@ static void pong_loop(void);
  */
 
 // Input data:
+uint8_t buttons;
 uint16_t joysticks[JOYSTICKS];
 // Entity data:
     // Array containing positions of objects:
@@ -50,11 +51,47 @@ typedef enum game_mode_t
     multi_player
 } game_mode_t;
 game_mode_t game_mode;
+// Scores:
 uint8_t sp_lives;
 uint8_t sp_score;
+// Pause:
+uint8_t pause;
+
+/* 
+ * Input functions
+ */
+
+void input_buttons(void)
+{
+    buttons = input_digital_read();
+}
+
+void input_joysticks(void)
+{
+    input_analogue_read(joysticks);
+
+    if(ABS(joysticks[0] - 2048) <= J1_DEADZONE)
+    { // Middle
+        velocities[1].dy = 0;
+    }
+    if(joysticks[0] > 2048 + J1_DEADZONE)
+    { // Down
+        velocities[1].dy = PADDLE_MAX_SPEED;
+    }
+    else if(joysticks[0] < 2048 - J1_DEADZONE)
+    { // Up
+        velocities[1].dy = -PADDLE_MAX_SPEED;
+    }
+}
+
+/*
+ * Initialisation functions
+ */
 
 static void pong_init(void)
 {
+    pause = 0;
+
     dt = 0;
 
     bounds.x = CANVAS_X;
@@ -105,8 +142,8 @@ static void pong_init(void)
                 break;
             }
         }
-        velocities[0].dx = signx * 20;
-        velocities[0].dy = signy * 20;
+        velocities[0].dx = signx * 40;
+        velocities[0].dy = signy * 40;
     }
 
         // Paddles:
@@ -325,6 +362,28 @@ static void ball_collision_y(void)
     }
 }
 
+void pause_menu(void)
+{
+    draw_string(0, 0, "PAUSE", FG_COLOUR);
+    show_screen();
+
+    input_digitial_flush();
+
+    while(1)
+    {
+        input_buttons();
+        if(buttons & 1)
+        {
+            pause = 0;
+            break;
+        }
+    }
+
+    input_digitial_flush();
+
+    clear_screen();
+}
+
 void pong_loop(void)
 {
     pong_init();
@@ -339,26 +398,23 @@ void pong_loop(void)
 
     // Read input:
         // Buttons (digital):
+        input_buttons();
+        // Joysticks (analogue):
+        input_joysticks();
 
-			// Joysticks (analogue):
-        input_analogue_read(joysticks);
-
-    // Interpret input, translating joystick movement to direction and intensity:
-        // Joystick:
-        if(ABS(joysticks[0] - 2048) <= J1_DEADZONE)
-        { // Middle
-            velocities[1].dy = 0;
+    // Game pause:
+        if(buttons & 1)
+        {
+            pause = 1;
         }
-        if(joysticks[0] > 2048 + J1_DEADZONE)
-        { // Down
-            velocities[1].dy = PADDLE_MAX_SPEED;
-        }
-        else if(joysticks[0] < 2048 - J1_DEADZONE)
-        { // Up
-            velocities[1].dy = -PADDLE_MAX_SPEED;
-        }
-
+        
     // Update entity models:
+        // Pause:
+        if(pause)
+        {
+            pause_menu();
+        }
+
         // Calculate the next position, assuming no collisions, for each object:
         for(uint8_t obj = 0; obj < objects_num; ++obj)
         {

@@ -6,6 +6,9 @@
 #define LEDPORT (GPIOB)
 #define LEDPIN (GPIO15)
 
+const uint8_t button_mask = 0b11111;
+uint8_t button_history = 0;
+uint8_t button_current_state = 0;
 uint8_t _button_is_pressed = 0;
 
 void input_digital_init(void)
@@ -20,9 +23,7 @@ void input_digital_init(void)
 
 void input_digital_button_debounce(void)
 {
-	const uint8_t button_mask = 0b11111; // retain 5 most recent samples of button state
-    static uint8_t button_history = 0;
-	uint8_t button_current_state = gpio_get(GPIOA, GPIO0);
+	button_current_state = ~(gpio_get(GPIOA, GPIO0)) & 1; // inversed logic due to pull up!
 	button_history = ((button_history<<1) & button_mask) | button_current_state;
 	if(button_history == button_mask)
 	{
@@ -42,4 +43,10 @@ void input_digital_button_debounce(void)
 uint8_t input_digital_read(void)
 { // TODO: update to use multiple buttons!
     return _button_is_pressed;
+}
+
+void input_digital_flush(void)
+{
+	button_current_state = 0;
+	button_history = 0;
 }

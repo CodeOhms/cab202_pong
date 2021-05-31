@@ -8,6 +8,7 @@
 #include "common.h"
 #include "timing.h"
 #include "input_analogue.h"
+#include "input_digital.h"
 
 #define CANVAS_X LCD_X
 #define CANVAS_Y LCD_Y

@@ -12,4 +12,6 @@ void input_digital_button_debounce(void);
 
 uint8_t input_digital_read(void);
 
+void input_digitial_flush(void);
+
 #endif //INPUT_DIGITAL_LIBOPENCM3_H
