@@ -13,7 +13,7 @@
 
 #define CANVAS_X LCD_X
 #define CANVAS_Y LCD_Y
-#define BALL_SPEED 1
+#define BALL_SPEED 25
 #define PADDLE_MAX_SPEED 60
 
 typedef uint16_t game_tick_t;

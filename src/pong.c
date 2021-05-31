@@ -3,8 +3,11 @@
 /*
  * Function forward declarations.
  */
+static void input_buttons(void);
+static void input_joysticks(void);
 static void pong_init(void);
 static void ball_launch(void);
+static void set_ball_speed_mul(void);
 static void pong_setup_single_player(void);
 static uint8_t pong_single_player(void);
 static collision_dim_t collision_w_bound(uint8_t collider_index);
@@ -29,6 +32,8 @@ static void pong_loop(void);
 uint8_t buttons;
 uint16_t joysticks[JOYSTICKS];
 // Entity data:
+    // Ball speed:
+uint8_t ball_speed_mul;
     // Array containing positions of objects:
 positions_t* positions;
     // Array containing change in positions of objects, assuming no collisions, not same as velocities as not wrt to time:
@@ -60,7 +65,7 @@ typedef enum game_mode_t
 game_mode_t game_mode;
 // Scores:
 uint8_t sp_lives;
-uint8_t sp_score;
+uint16_t sp_score;
 // Pause:
 uint8_t pause;
 
@@ -68,12 +73,12 @@ uint8_t pause;
  * Input functions
  */
 
-void input_buttons(void)
+static void input_buttons(void)
 {
     buttons = input_digital_read();
 }
 
-void input_joysticks(void)
+static void input_joysticks(void)
 {
     input_analogue_read(joysticks);
 
@@ -130,30 +135,7 @@ static void pong_init(void)
 
     // Initial velocities:
         // Ball:
-    {
-        int signx = 0;
-        int signy = 0;
-        while(1)
-        {
-            srand(get_elapsed_game_ticks());
-            const int upper = 1;
-            const int lower = -1;
-            if(signx == 0)
-            {
-                signx = (rand() % (upper - lower + 1)) + lower;
-            }
-            if(signy == 0)
-            {
-                signy = (rand() % (upper - lower + 1)) + lower;
-            }
-            if(signx != 0 && signy != 0)
-            {
-                break;
-            }
-        }
-        velocities[0].dx = signx * 90;
-        velocities[0].dy = signy * 90;
-    }
+    ball_launch();
 
         // Paddles:
     positions[1].x = 0;
@@ -166,10 +148,48 @@ static void pong_init(void)
 
 static void ball_launch(void)
 {
+    set_ball_speed_mul();
+
+    int signx = 0;
+    int signy = 0;
+    while(1)
+    {
+        srand(get_elapsed_game_ticks());
+        const int upper = 1;
+        const int lower = -1;
+        if(signx == 0)
+        {
+            signx = (rand() % (upper - lower + 1)) + lower;
+        }
+        if(signy == 0)
+        {
+            signy = (rand() % (upper - lower + 1)) + lower;
+        }
+        if(signx != 0 && signy != 0)
+        {
+            break;
+        }
+    }
+    velocities[0].dx = signx * BALL_SPEED * ball_speed_mul;
+    velocities[0].dy = signy * BALL_SPEED * ball_speed_mul;
+
     positions[0].x = CANVAS_X / 2;
     positions[0].y = CANVAS_Y / 2;
     positions_next[0].x = CANVAS_X / 2;
     positions_next[0].y = CANVAS_Y / 2;
+}
+
+static void set_ball_speed_mul(void)
+{
+    // Multiplier limited to 4 levels:
+    if(ball_speed_mul != 5)
+    {
+        ball_speed_mul = sp_score / 3 + 1; // truncate as multiplier is limited to +ve int values!
+    }
+    else
+    {
+        ball_speed_mul = 1;
+    }
 }
 
 static void pong_setup_single_player(void)
@@ -210,6 +230,9 @@ static uint8_t pong_single_player(void)
             case collision_x:
                 ball_collision_x();
                 ++sp_score;
+                set_ball_speed_mul();
+                velocities[0].dx = (velocities[0].dx < 0 ? -1 : 1) * BALL_SPEED * ball_speed_mul;
+                velocities[0].dy = (velocities[0].dx < 0 ? -1 : 1) * BALL_SPEED * ball_speed_mul;
                 break;
         }
     }
