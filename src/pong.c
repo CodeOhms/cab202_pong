@@ -4,9 +4,9 @@
  * Function forward declarations.
  */
 static void pong_init(void);
-static void pong_reset(void);
+static void ball_launch(void);
 static void pong_setup_single_player(void);
-static void pong_single_player(void);
+static uint8_t pong_single_player(void);
 static collision_dim_t collision_w_bound(uint8_t collider_index);
 static collision_dim_t collision_w_paddle_y(position_t pad_y_next, position_t coll_y_next,
                                             dimension_t pad_len, dimension_t coll_len);
@@ -14,6 +14,7 @@ static collision_dim_t collision_w_paddle(uint8_t paddle_index, uint8_t collider
 static void paddle_bound_collision(uint8_t paddle_index);
 static void ball_collision_x(void);
 static void ball_collision_y(void);
+static void pong_loop(void);
 
 /*
  * Variables
@@ -42,13 +43,15 @@ double dt;
     // Objects:
 uint8_t objects_num;
 dimensions_t bounds;
-// Game mode:
+// Game mode variables:
 typedef enum game_mode_t
 {
     single_player,
     multi_player
 } game_mode_t;
 game_mode_t game_mode;
+uint8_t sp_lives;
+uint8_t sp_score;
 
 static void pong_init(void)
 {
@@ -86,7 +89,7 @@ static void pong_init(void)
         int signy = 0;
         while(1)
         {
-            srand(joysticks[0]);
+            srand(get_elapsed_game_ticks());
             const int upper = 1;
             const int lower = -1;
             if(signx == 0)
@@ -105,11 +108,6 @@ static void pong_init(void)
         velocities[0].dx = signx * 20;
         velocities[0].dy = signy * 20;
     }
-    // positions[0].y = 2;
-    // positions_next[0].y = 2;
-    // velocities[0].dx = 0;
-    // velocities[0].dy = 50;
-
 
         // Paddles:
     positions[1].x = 0;
@@ -120,7 +118,7 @@ static void pong_init(void)
     velocities[1].dy = 0;
 }
 
-static void pong_reset(void)
+static void ball_launch(void)
 {
     positions[0].x = CANVAS_X / 2;
     positions[0].y = CANVAS_Y / 2;
@@ -132,10 +130,14 @@ static void pong_setup_single_player(void)
 {
     objects_num = 2;
     game_mode = single_player;
+    sp_lives = 3;
+    sp_score = 0;
 }
 
-static void pong_single_player(void)
+static uint8_t pong_single_player(void)
 {
+    uint8_t is_game_not_over = 1;
+
     // Paddle bound collisions:
     collision_dim_t dimension_of_collision;
     for(uint8_t pad = 1; pad < objects_num; ++pad)
@@ -174,8 +176,16 @@ static void pong_single_player(void)
         
         case collision_x:
             if(positions_next[0].x <= 0)
-            { // Lost life, reset.
-                pong_reset();
+            { // Lost life
+                if(sp_lives == 1)
+                { // Game over, reset
+                    is_game_not_over = 0;
+                }
+                else
+                {
+                    --sp_lives;
+                    ball_launch();
+                }
             }
             else
             {
@@ -186,6 +196,8 @@ static void pong_single_player(void)
         case collision_none:
             break;
     }
+
+    return is_game_not_over;
 }
 
 /*
@@ -313,7 +325,7 @@ static void ball_collision_y(void)
     }
 }
 
-void pong(void)
+void pong_loop(void)
 {
     pong_init();
     pong_setup_single_player();
@@ -355,14 +367,24 @@ void pong(void)
         }
 
         // Check for and react to collisions, according to game mode:
+        uint8_t is_game_not_over = 1;
         switch(game_mode)
         {
             case single_player:
-                pong_single_player();
+                if(!pong_single_player())
+                { // Game over
+                    is_game_not_over = 0;
+                }
                 break;
             
             case multi_player:
                 break;
+        }
+
+    // Is the game over?:
+        if(!is_game_not_over)
+        { // Game over, break out of game loop
+            break;
         }
 
     // Update the screen:
@@ -376,5 +398,13 @@ void pong(void)
             positions[obj].x = positions_next[obj].x;
             positions[obj].y = positions_next[obj].y;
         }
+    }
+}
+
+void pong(void)
+{
+    while(1)
+    {
+        pong_loop();
     }
 }
