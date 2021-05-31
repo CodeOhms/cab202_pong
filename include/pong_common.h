@@ -29,11 +29,6 @@ typedef struct positions_t
     position_t x;
     position_t y;
 } positions_t;
-// typedef struct dpositions
-// {
-//     dposition_t dx;
-//     dposition_t dy;
-// } dpositions_t;
 typedef struct velocities_t
 {
     velocity_t dx;

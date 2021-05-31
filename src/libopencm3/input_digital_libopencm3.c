@@ -14,7 +14,8 @@ void input_digital_init(void)
     // gpio_set_mode(GPIOA, GPIO_MODE_INPUT, GPIO_CNF_INPUT_FLOAT, GPIO0); // use external pull down
         // Use internal pull down:
     gpio_set_mode(GPIOA, GPIO_MODE_INPUT, GPIO_CNF_INPUT_PULL_UPDOWN, GPIO0); // default to pull down resistor
-    // GPIO_BSRR(GPIOC_ODR) = (1<<0); // Use set/reset register to enable pull up. Can use gpio_set also
+    // GPIO_BSRR(GPIOA_ODR) = GPIO0; // Use set/reset register to enable pull up. Can use gpio_set also
+	gpio_set(GPIOA, GPIO0);
 }
 
 void input_digital_button_debounce(void)
@@ -26,12 +27,12 @@ void input_digital_button_debounce(void)
 	if(button_history == button_mask)
 	{
 		_button_is_pressed = 1;
-        gpio_clear(LEDPORT, LEDPIN); // builtin LED is tied to Vcc, inversed logic
+        gpio_set(LEDPORT, LEDPIN);
 	}
 	else if(button_history == 0)
 	{
 		_button_is_pressed = 0;
-        gpio_set(LEDPORT, LEDPIN);
+        gpio_clear(LEDPORT, LEDPIN);
 	}
 
 	// Clear overflow counter for timer:

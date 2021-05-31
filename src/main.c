@@ -28,28 +28,6 @@ static void led_setup(void)
 #endif
 }
 
-// void blink(void);
-// void blink(void)
-// {
-// 	static uint8_t button_history = 0;
-// 	// static uint8_t button_is_pressed = 0;
-// 	const uint8_t button_mask = 0b11111; // retain 5 most recent samples of button state
-// 	uint8_t button_current_state = gpio_get(GPIOA, GPIO0);
-// 	button_history = ((button_history<<1) & button_mask) | button_current_state;
-// 	if(button_history == button_mask)
-// 	{
-// 		// button_is_pressed = 1;
-// 		gpio_clear(LEDPORT, LEDPIN); // builtin LED is tied to Vcc, inversed logic
-// 		// WRITE_BIT(LEDPORT, LEDPIN, 0);
-// 	}
-// 	else if(button_history == 0)
-// 	{
-// 		// button_is_pressed = 0;
-// 		gpio_set(LEDPORT, LEDPIN);
-// 		// WRITE_BIT(LEDPORT, LEDPIN, 1);
-// 	}
-// }
-
 int main(void)
 {
 	// Setup data:
