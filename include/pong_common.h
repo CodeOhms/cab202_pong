@@ -1,6 +1,7 @@
 #ifndef  PONG_COMMON_H
 #define  PONG_COMMON_H
 
+#include <stdio.h>
 // CAB202 libraries
 #include <lcd.h>
 #include <graphics.h>
@@ -13,7 +14,7 @@
 #define CANVAS_X LCD_X
 #define CANVAS_Y LCD_Y
 #define BALL_SPEED 1
-#define PADDLE_MAX_SPEED 40
+#define PADDLE_MAX_SPEED 60
 
 typedef uint16_t game_tick_t;
 typedef double position_t;

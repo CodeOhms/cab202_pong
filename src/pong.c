@@ -43,7 +43,14 @@ dimensions_t* object_dimensions;
 double dt;
     // Objects:
 uint8_t objects_num;
-dimensions_t bounds;
+// dimensions_t bounds;
+struct
+{
+    uint8_t top;
+    uint8_t bottom;
+    uint8_t left;
+    uint8_t right;
+} bounds;
 // Game mode variables:
 typedef enum game_mode_t
 {
@@ -94,8 +101,10 @@ static void pong_init(void)
 
     dt = 0;
 
-    bounds.x = CANVAS_X;
-    bounds.y = CANVAS_Y;
+    bounds.top = 7;
+    bounds.bottom = CANVAS_Y;
+    bounds.left = 0;
+    bounds.right = CANVAS_X;
 
     objects_num = 3;
     positions = malloc(sizeof(positions_t) * objects_num);
@@ -114,10 +123,10 @@ static void pong_init(void)
 
     // Initial positions:
         // Ball:
-    positions[0].x = CANVAS_X / 2;
-    positions[0].y = CANVAS_Y / 2;
-    positions_next[0].x = CANVAS_X / 2;
-    positions_next[0].y = CANVAS_Y / 2;
+    positions[0].x = bounds.right / 2;
+    positions[0].y = (bounds.bottom - bounds.top) / 2;
+    positions_next[0].x = positions[0].y;
+    positions_next[0].y = positions[0].x;
 
     // Initial velocities:
         // Ball:
@@ -142,8 +151,8 @@ static void pong_init(void)
                 break;
             }
         }
-        velocities[0].dx = signx * 40;
-        velocities[0].dy = signy * 40;
+        velocities[0].dx = signx * 90;
+        velocities[0].dy = signy * 90;
     }
 
         // Paddles:
@@ -200,6 +209,7 @@ static uint8_t pong_single_player(void)
         {
             case collision_x:
                 ball_collision_x();
+                ++sp_score;
                 break;
         }
     }
@@ -250,12 +260,12 @@ static collision_dim_t collision_w_bound(uint8_t collider_index)
     uint8_t coll_len = object_dimensions[collider_index].y;
 
     // Left or right bound collision:
-    if(x_next < 0 || x_next + coll_width > bounds.x)
+    if(x_next < bounds.left || x_next + coll_width > bounds.right)
     {
         return collision_x;
     }
     // Top or bottom collision:
-    if(y_next < 0 || y_next + coll_len > bounds.y)
+    if(y_next < bounds.top || y_next + coll_len > bounds.bottom)
     {
         return collision_y;
     }
@@ -301,7 +311,7 @@ static collision_dim_t collision_w_paddle(uint8_t paddle_index, uint8_t collider
             return collision_w_paddle_y(pad_y_next, coll_y_next, pad_len, coll_len);
         }
     }
-    else if(pad_x == bounds.x)
+    else if(pad_x == bounds.right)
     { // Right paddle
         if(coll_x_next + coll_width > pad_x)
         {
@@ -319,11 +329,11 @@ static void paddle_bound_collision(uint8_t paddle_index)
 {
     if(velocities[paddle_index].dy < 0)
     { // -ve dy, so hit top of screen:
-        positions_next[paddle_index].y = 0;
+        positions_next[paddle_index].y = bounds.top;
     }
     else
     { // +ve dy, so hit bottom of screen:
-        positions_next[paddle_index].y = bounds.y - object_dimensions[paddle_index].y;
+        positions_next[paddle_index].y = bounds.bottom - object_dimensions[paddle_index].y;
     }
 
     velocities[paddle_index].dy = 0;
@@ -339,10 +349,10 @@ static void ball_collision_x(void)
     { // Left side
         positions_next[0].x = positions_next[0].x * -1;
     }
-    else if(positions_next[0].x > bounds.x + object_dimensions[0].x)
+    else if(positions_next[0].x > bounds.right + object_dimensions[0].x)
     { // Right side
         // positions[0].x = bounds.x - (positions[0].x - bounds.x);
-        positions_next[0].x = 2*bounds.x - positions_next[0].x;
+        positions_next[0].x = 2*bounds.right - positions_next[0].x;
     }
 }
 
@@ -356,9 +366,9 @@ static void ball_collision_y(void)
     { // Top side
         positions_next[0].y = positions_next[0].y * -1;
     }
-    else if(positions_next[0].y > bounds.y + object_dimensions[0].y)
+    else if(positions_next[0].y > bounds.bottom + object_dimensions[0].y)
     { // Bottom side
-        positions_next[0].y = 2*bounds.y - positions_next[0].y;
+        positions_next[0].y = 2*bounds.bottom - positions_next[0].y;
     }
 }
 
@@ -367,7 +377,12 @@ void pause_menu(void)
     draw_string(0, 0, "PAUSE", FG_COLOUR);
     show_screen();
 
-    input_digitial_flush();
+    // Debounce the pause:
+    input_buttons();
+    while(buttons & 1)
+    {
+        input_buttons();
+    }
 
     while(1)
     {
@@ -379,7 +394,12 @@ void pause_menu(void)
         }
     }
 
-    input_digitial_flush();
+    // Debounce the pause:
+    input_buttons();
+    while(buttons & 1)
+    {
+        input_buttons();
+    }
 
     clear_screen();
 }
@@ -446,6 +466,9 @@ void pong_loop(void)
     // Update the screen:
         draw_ball(positions_next[0].x , positions_next[0].y, object_dimensions[0]);
         draw_paddle(positions_next[1].x, positions_next[1].y, positions_next[1].x, positions_next[1].y + object_dimensions[1].y);
+        char score_print[16];
+        sprintf(score_print, "Score %i", sp_score);
+        draw_string(0, 0, score_print, FG_COLOUR);
         canvas_update_all();
         
     // Set the current position to the next position that was calculated:

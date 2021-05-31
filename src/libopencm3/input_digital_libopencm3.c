@@ -49,4 +49,5 @@ void input_digital_flush(void)
 {
 	button_current_state = 0;
 	button_history = 0;
+	_button_is_pressed = 0;
 }

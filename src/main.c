@@ -47,7 +47,7 @@ int main(void)
 	input_analogue_init();
 	input_analogue_enable_reading();
 	// Setup LCD:
-	lcd_init(71);
+	lcd_init(73);
 	clear_screen();
 	// char s[] = "Hello world!";
 	// draw_string(0, 0, s, FG_COLOUR);
