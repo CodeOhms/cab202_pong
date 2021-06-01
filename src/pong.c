@@ -190,6 +190,8 @@ static void set_ball_speed_mul(void)
     {
         ball_speed_mul = 1;
     }
+
+    set_ball_speed_mul_led(ball_speed_mul);
 }
 
 static void pong_setup_single_player(void)
@@ -232,7 +234,7 @@ static uint8_t pong_single_player(void)
                 ++sp_score;
                 set_ball_speed_mul();
                 velocities[0].dx = (velocities[0].dx < 0 ? -1 : 1) * BALL_SPEED * ball_speed_mul;
-                velocities[0].dy = (velocities[0].dx < 0 ? -1 : 1) * BALL_SPEED * ball_speed_mul;
+                velocities[0].dy = (velocities[0].dy < 0 ? -1 : 1) * BALL_SPEED * ball_speed_mul;
                 break;
         }
     }

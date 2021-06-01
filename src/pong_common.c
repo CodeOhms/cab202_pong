@@ -24,13 +24,26 @@ void draw_ball(position_t x, position_t y, dimensions_t ball_dims)
             draw_pixel((int) x + px_x, (int) y + px_y, FG_COLOUR);
         }
     }
+}
 
-    // lcd_position(x, y);
-    // // Calculate the pixel, within that LCD bank
-	// uint8_t bank = (int) y >> 3;
-	// uint8_t pixel = (int) y & 7;
-	// // Set that particular pixel in our screen buffer
-	// 	// Draw Pixel
-    // uint8_t byte = [bank*CANVAS_X + x] |= (1 << pixel);
-    // lcd_write();
+void set_ball_speed_mul_led(uint8_t ball_speed_mul)
+{
+    switch(ball_speed_mul)
+    {
+        case 1:
+            pwm_set_duty_cycle(0.0);
+            break;
+        
+        case 2:
+            pwm_set_duty_cycle(25.0);
+            break;
+        
+        case 3:
+            pwm_set_duty_cycle(50.0);
+            break;
+        
+        case 4:
+            pwm_set_duty_cycle(100.0);
+            break;
+    }
 }

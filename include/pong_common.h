@@ -10,6 +10,7 @@
 #include "timing.h"
 #include "input_analogue.h"
 #include "input_digital.h"
+#include "pwm.h"
 
 #define CANVAS_X LCD_X
 #define CANVAS_Y LCD_Y
@@ -50,5 +51,7 @@ void canvas_update_all(void);
 void draw_paddle(position_t x, position_t y, position_t x_next, position_t y_next);
 
 void draw_ball(position_t x, position_t y, dimensions_t ball_dims);
+
+void set_ball_speed_mul_led(uint8_t ball_speed_mul);
 
 #endif //PONG_COMMON_H

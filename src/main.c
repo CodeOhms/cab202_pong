@@ -11,6 +11,7 @@
 #include "input_digital.h"
 #include "input_analogue.h"
 #include "timing.h"
+#include "pwm.h"
 #include "pong.h"
 
 #define RCCLEDPORT (RCC_GPIOB)
@@ -42,6 +43,7 @@ int main(void)
 	// Enable MCU peripherals:
     peripherals_control_init();
 	led_setup();
+	pwm_init();
     timing_init(1, time_limits, timed_funcs, timed_funcs_en);
 	input_digital_init();
 	input_analogue_init();

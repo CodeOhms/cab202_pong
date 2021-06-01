@@ -12,6 +12,8 @@ void peripherals_control_init(void)
     rcc_periph_clock_enable(RCC_GPIOB);
         // Enable clock for timer 2:
     RCC_APB1ENR |= RCC_APB1ENR_TIM2EN;
+        // Enable clock for timer 4:
+    RCC_APB1ENR |= RCC_APB1ENR_TIM4EN;
         // ADC:
     rcc_periph_clock_enable(RCC_ADC1);
         // DMA:
