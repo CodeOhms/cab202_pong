@@ -3,7 +3,9 @@
 void pwm_init(void)
 {
     // Set gpio pin PB5 as output:
-    gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO9);
+    // gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO9);
+    GPIOB_CRH &= ~((3 << 6)|(3 << 4));
+    GPIOB_CRH |= (2 << 6)|(2 << 4);
 
     // Output compare enable:
     TIM4_CCER |= TIM_CCER_CC4E;

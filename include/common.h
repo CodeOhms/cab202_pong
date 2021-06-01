@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+// Header file to replace register definitions from libopencm3:
+#include "libopencm3/libopencm3_registers.h"
 
 #define ABS(x) (((x) >= 0) ? (x) : -(x))
 

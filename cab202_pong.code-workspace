@@ -15,7 +15,9 @@
 			"graphics.h": "c",
 			"lcd.h": "c",
 			"pong.h": "c",
-			"pong_common.h": "c"
+			"pong_common.h": "c",
+			"peripherals_control.h": "c",
+			"rcc.h": "c"
 		}
 	}
 }

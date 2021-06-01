@@ -11,36 +11,50 @@ uint16_t _adc_buff[ADC_BUFF_SIZE];
 static void input_analogue_adc_init(void)
 {
 	// Ensure the ADC is off to change the values:
-	adc_power_off(ADC1);
-	rcc_periph_reset_pulse(RST_ADC1);
-	// Set prescaler, ADC clock must no exceed 14 MHz:
-	rcc_set_adcpre(RCC_CFGR_ADCPRE_PCLK2_DIV8);
-	// Using only one ADC peripheral, chose individual mode:
-	adc_set_dual_mode(ADC_CR1_DUALMOD_IND);
-	// Right aligned, values 0 - 4096 but effectively inverts the y axis:
-	adc_set_right_aligned(ADC1);
-	// Select channels to read analogue data:
-	uint8_t channels[1] = { ADC_CHANNEL1 };
-    adc_set_regular_sequence(ADC1, JOYSTICKS, channels);
-	// Currently using only one joystick, disable scan mode:
-	adc_disable_scan_mode(ADC1);
-	// Using DMA, so require continous conversion mode:
-	adc_set_continuous_conversion_mode(ADC1);
-	// Set sampling time:
-	adc_set_sample_time(ADC1, ADC_CHANNEL1, ADC_SMPR_SMP_1DOT5CYC);
-	// :
-	adc_enable_external_trigger_regular(ADC1, ADC_CR2_EXTSEL_SWSTART);
-	// Enable DMA,
-	// dma_enable_channel(DMA1, DMA_CHANNEL1);
+	// adc_power_off(ADC1);
+	ADC1_CR2 &= ~ADC_CR2_ADON;
 
-	adc_enable_dma(ADC1);
+	// Set prescaler, ADC clock must no exceed 14 MHz:
+	// rcc_set_adcpre(RCC_CFGR_ADCPRE_PCLK2_DIV8);
+	RCC_CFGR |= 0b0110;
+	// Using only one ADC peripheral, chose individual mode:
+	// adc_set_dual_mode(ADC_CR1_DUALMOD_IND);
+	ADC1_CR1 |= (0x0 << 16);
+	// Right aligned, values 0 - 4096 but effectively inverts the y axis:
+	// adc_set_right_aligned(ADC1);
+	ADC1_CR2 &= ~(1 << 11);
+	// Select channels to read analogue data:
+	// uint8_t channels[1] = { ADC_CHANNEL1 };
+    // adc_set_regular_sequence(ADC1, JOYSTICKS, channels);
+	ADC1_SQR3 = 1;
+	// Currently using only one joystick, disable scan mode:
+	// adc_disable_scan_mode(ADC1);
+	ADC1_CR1 &= (1 << 8);
+	// Using DMA, so require continous conversion mode:
+	// adc_set_continuous_conversion_mode(ADC1);
+	ADC1_CR2 |= 2;
+	// Set sampling time:
+	// adc_set_sample_time(ADC1, ADC_CHANNEL1, ADC_SMPR_SMP_1DOT5CYC);
+	ADC1_SMPR2 &= ~(0b111 << 3);
+	// :
+	// adc_enable_external_trigger_regular(ADC1, ADC_CR2_EXTSEL_SWSTART);
+	ADC1_CR2 |= (0b111 << 17)|(1 << 20);
+	// Enable DMA:
+	// adc_enable_dma(ADC1);
+	ADC1_CR2 |= (1 << 8);
+
 	// Turn on ADC and give it about 3 microseconds to boot up:
-	adc_power_on(ADC1);
+	// adc_power_on(ADC1);
+	ADC1_CR2 |= 1;
 	for (int i = 0; i < 800000; i++)
 		{ __asm__("nop"); }
 	// Calibrate the ADC for better accuracy:
-	adc_reset_calibration(ADC1);
-	adc_calibrate(ADC1);
+	// adc_reset_calibration(ADC1);
+	ADC1_CR2 |= (1 << 3);
+	while(ADC1_CR2 & (1 << 3));
+	// adc_calibrate(ADC1);
+	ADC1_CR2 |= (1 << 2);
+	while(ADC1_CR2 & (1 << 2));
 }
 
 static void input_analogue_dma_init(void)
