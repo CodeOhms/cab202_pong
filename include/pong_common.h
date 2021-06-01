@@ -11,6 +11,7 @@
 #include "input_analogue.h"
 #include "input_digital.h"
 #include "pwm.h"
+#include "serial_comm.h"
 
 #define CANVAS_X LCD_X
 #define CANVAS_Y LCD_Y
@@ -53,5 +54,7 @@ void draw_paddle(position_t x, position_t y, position_t x_next, position_t y_nex
 void draw_ball(position_t x, position_t y, dimensions_t ball_dims);
 
 void set_ball_speed_mul_led(uint8_t ball_speed_mul);
+
+void serial_print_sp_score(uint16_t sp_score);
 
 #endif //PONG_COMMON_H

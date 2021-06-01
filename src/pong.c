@@ -181,8 +181,8 @@ static void ball_launch(void)
 
 static void set_ball_speed_mul(void)
 {
-    // Multiplier limited to 4 levels:
-    if(ball_speed_mul != 5)
+    // Multiplier limited to 4 levels, 1 to 5:
+    if(ball_speed_mul < 5)
     {
         ball_speed_mul = sp_score / 3 + 1; // truncate as multiplier is limited to +ve int values!
     }
@@ -436,6 +436,10 @@ void pong_loop(void)
 
     while(1)
     {
+        // serial_comm_send("Hello world\r\n", 14);
+        // serial_comm_send('a');
+
+
         canvas_clear();
 
     // Get time since last game tick:
@@ -510,5 +514,6 @@ void pong(void)
     while(1)
     {
         pong_loop();
+        serial_print_sp_score(sp_score);
     }
 }

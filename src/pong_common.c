@@ -31,19 +31,26 @@ void set_ball_speed_mul_led(uint8_t ball_speed_mul)
     switch(ball_speed_mul)
     {
         case 1:
-            pwm_set_duty_cycle(0.0);
-            break;
-        
-        case 2:
             pwm_set_duty_cycle(25.0);
             break;
         
-        case 3:
+        case 2:
             pwm_set_duty_cycle(50.0);
+            break;
+        
+        case 3:
+            pwm_set_duty_cycle(75.0);
             break;
         
         case 4:
             pwm_set_duty_cycle(100.0);
             break;
     }
+}
+
+void serial_print_sp_score(uint16_t sp_score)
+{
+    char scr_msg[128];
+    sprintf(scr_msg, "Score: %d\r\n", sp_score);
+    serial_comm_send(scr_msg, 128);
 }

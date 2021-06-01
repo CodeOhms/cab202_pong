@@ -1,6 +1,6 @@
 #include "serial_comm.h"
 
-void serial_comm_init()
+void serial_comm_init(void)
 {
     // PA9 -> TX1, PA10 -> RX1
     /* Setup GPIO pin GPIO_USART1_TX. */
@@ -17,4 +17,16 @@ void serial_comm_init()
 
 	/* Finally enable the USART. */
 	usart_enable(USART1);
+}
+
+void serial_comm_send(char* string, size_t size)
+{
+	for(uint16_t i = 0; i < size; ++i)
+	{
+		if(string[i] == '\0')
+		{
+			break;
+		}
+		usart_send_blocking(USART1, string[i]);
+	}
 }
