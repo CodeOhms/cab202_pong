@@ -436,10 +436,6 @@ void pong_loop(void)
 
     while(1)
     {
-        // serial_comm_send("Hello world\r\n", 14);
-        // serial_comm_send('a');
-
-
         canvas_clear();
 
     // Get time since last game tick:

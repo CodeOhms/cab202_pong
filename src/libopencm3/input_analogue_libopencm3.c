@@ -20,14 +20,14 @@ static void input_analogue_adc_init(void)
 	// Right aligned, values 0 - 4096 but effectively inverts the y axis:
 	adc_set_right_aligned(ADC1);
 	// Select channels to read analogue data:
-	uint8_t channels[1] = { ADC_CHANNEL5 };
+	uint8_t channels[1] = { ADC_CHANNEL1 };
     adc_set_regular_sequence(ADC1, JOYSTICKS, channels);
 	// Currently using only one joystick, disable scan mode:
 	adc_disable_scan_mode(ADC1);
 	// Using DMA, so require continous conversion mode:
 	adc_set_continuous_conversion_mode(ADC1);
 	// Set sampling time:
-	adc_set_sample_time(ADC1, ADC_CHANNEL5, ADC_SMPR_SMP_1DOT5CYC);
+	adc_set_sample_time(ADC1, ADC_CHANNEL1, ADC_SMPR_SMP_1DOT5CYC);
 	// :
 	adc_enable_external_trigger_regular(ADC1, ADC_CR2_EXTSEL_SWSTART);
 	// Enable DMA,
@@ -87,7 +87,7 @@ static void input_analogue_dma_init(void)
 void input_analogue_init(void)
 {
 	// Enable gpio for ADC:
-	gpio_set_mode(GPIOA, GPIO_MODE_INPUT, GPIO_CNF_INPUT_ANALOG, GPIO5);
+	gpio_set_mode(GPIOA, GPIO_MODE_INPUT, GPIO_CNF_INPUT_ANALOG, GPIO1);
 	
 	// Prepare DMA to use with ADC:
 	input_analogue_dma_init();
