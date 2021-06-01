@@ -12,7 +12,8 @@ void input_digital_init(void)
 {
     // Setup button pins as inputs with pull down resistors:
     // gpio_set_mode(GPIOA, GPIO_MODE_INPUT, GPIO_CNF_INPUT_PULL_UPDOWN, GPIO0);
-	GPIOA_CRL = 2;
+	GPIOA_CRL &= ~(0b1111);
+	GPIOA_CRL |= (1 << 3);
 		// Use internal pull up:
 	// gpio_set(GPIOA, GPIO0);
 	GPIOA_BSRR = 1;

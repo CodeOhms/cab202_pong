@@ -19,6 +19,7 @@ void serial_comm_init(void)
 	usart_enable(USART1);
 }
 
+#define USART_FR(x)             MMIO32((x) + 0x0018)
 void serial_comm_send(char* string, size_t size)
 {
 	for(uint16_t i = 0; i < size; ++i)
@@ -27,6 +28,8 @@ void serial_comm_send(char* string, size_t size)
 		{
 			break;
 		}
-		usart_send_blocking(USART1, string[i]);
+		// usart_send_blocking(USART1, string[i]);
+		while ( !(USART1_SR & (1 << 6)) );
+		USART1_DR = string[i];
 	}
 }
