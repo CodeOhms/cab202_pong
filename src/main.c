@@ -15,21 +15,6 @@
 #include "serial_comm.h"
 #include "pong.h"
 
-#define RCCLEDPORT (RCC_GPIOB)
-#define LEDPORT (GPIOB)
-#define LEDPIN (GPIO15)
-#define GPIO_MODE_OUTPUT GPIO_MODE_OUTPUT_2_MHZ
-#define GPIO_PUPD_NONE GPIO_CNF_OUTPUT_PUSHPULL
-
-static void led_setup(void)
-{
-#ifdef STM32F1
-    gpio_set_mode(LEDPORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, LEDPIN);
-#else
-	gpio_mode_setup(LEDPORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, LEDPIN);
-#endif
-}
-
 int main(void)
 {
 	// Setup data:
@@ -44,7 +29,6 @@ int main(void)
 	// Enable MCU peripherals:
     peripherals_control_init();
 	serial_comm_init();
-	led_setup();
 	pwm_init();
     timing_init(1, time_limits, timed_funcs, timed_funcs_en);
 	input_digital_init();
