@@ -19,4 +19,6 @@ void peripherals_control_init(void)
         // DMA:
     // rcc_periph_clock_enable(RCC_DMA1);
     RCC_AHBENR |= RCC_AHBENR_DMA1EN;
+        // USART:
+    rcc_periph_clock_enable(RCC_USART1);
 }
