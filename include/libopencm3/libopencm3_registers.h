@@ -14,7 +14,7 @@
 
 #define NVIC_ISER(iser_id)		        MMIO32(NVIC_BASE + 0x00 + ((iser_id) * 4))
 
-#define NVIC_TIM2_IRQ                   15
+#define NVIC_TIM2_IRQ                   28
 // RCC //////////////////////////////////////////////////////////////////////////////////
 #define RCC_BASE			            (PERIPH_BASE_AHB + 0x09000)
 

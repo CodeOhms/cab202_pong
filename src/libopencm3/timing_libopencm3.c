@@ -1,5 +1,5 @@
-// #include "libopencm3/timing_libopencm3.h"
 #include "timing.h"
+#include <libopencm3/cm3/nvic.h>
 
 uint16_t _prescaler = 0;
 
