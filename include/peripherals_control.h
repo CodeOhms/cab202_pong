@@ -3,6 +3,8 @@
 
 #include "libopencm3/libopencm3_registers.h"
 
+#include "common.h"
+
 /* Initialise peripherals, such as timers and GPIO */
 void peripherals_control_init(void);
 

@@ -1,6 +1,6 @@
-#include <libopencm3/stm32/rcc.h>
-#include <libopencm3/stm32/gpio.h>
-#include <libopencm3/stm32/flash.h>
+// #include <libopencm3/stm32/rcc.h>
+// #include <libopencm3/stm32/gpio.h>
+// #include <libopencm3/stm32/flash.h>
 
 #include "peripherals_control.h"
 
@@ -80,9 +80,9 @@ void rcc_clock_setup_72mhz(void)
     RCC_CFGR |= (0b111 << 24);
 
 	/* Set the peripheral clock frequencies used */
-	rcc_ahb_frequency = 72000000;
-	rcc_apb1_frequency = 36000000;
-	rcc_apb2_frequency = 72000000;
+	// rcc_ahb_frequency = 72000000;
+	// rcc_apb1_frequency = 36000000;
+	// rcc_apb2_frequency = 72000000;
 }
 
 void peripherals_control_init(void)
@@ -92,20 +92,20 @@ void peripherals_control_init(void)
     rcc_clock_setup_72mhz();
         // GPIO clocks:
     // rcc_periph_clock_enable(RCC_GPIOA);
-    RCC_APB2ENR |= RCC_APB2ENR_IOPAEN;
+    RCC_APB2ENR |= (1 << 2);
     // rcc_periph_clock_enable(RCC_GPIOB);
-    RCC_APB2ENR |= RCC_APB2ENR_IOPBEN;
+    RCC_APB2ENR |= (1 << 3);
         // Enable clock for timer 2:
-    RCC_APB1ENR |= RCC_APB1ENR_TIM2EN;
+    RCC_APB1ENR |= (1 << 0);
         // Enable clock for timer 4:
-    RCC_APB1ENR |= RCC_APB1ENR_TIM4EN;
+    RCC_APB1ENR |= (1 << 2);
         // ADC:
     // rcc_periph_clock_enable(RCC_ADC1);
-    RCC_APB2ENR |= RCC_APB2ENR_ADC1EN;
+    RCC_APB2ENR |= (1 << 9);
         // DMA:
     // rcc_periph_clock_enable(RCC_DMA1);
-    RCC_AHBENR |= RCC_AHBENR_DMA1EN;
+    RCC_AHBENR |= (1 << 0);
         // USART:
     // rcc_periph_clock_enable(RCC_USART1);
-    RCC_APB2ENR |= RCC_APB2ENR_USART1EN;
+    RCC_APB2ENR |= (1 << 14);
 }

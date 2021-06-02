@@ -193,6 +193,8 @@
 
 #define TIM4_CCR4			            TIM_CCR4(TIM4)
 // FLASH ////////////////////////////////////////////////////////////////////////////////
+#define FLASH_MEM_INTERFACE_BASE	    (PERIPH_BASE_AHB + 0x0a000)
+
 #define FLASH_ACR			            MMIO32(FLASH_MEM_INTERFACE_BASE + 0x00)
 
 #endif //LIBOPENCM3_REGISTERS_H
