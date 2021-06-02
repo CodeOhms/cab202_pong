@@ -437,6 +437,7 @@ void pong_loop(void)
     while(1)
     {
         canvas_clear();
+        serial_comm_send("ScREam\r\n", 9);
 
     // Get time since last game tick:
         dt = get_elapsed_game_time();
