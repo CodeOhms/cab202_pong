@@ -10,11 +10,11 @@ void timing_init_hardware(void)
     TIM2_PSC = _prescaler - 1; // though really it is 4 bc there is a hidden +1
     // timer_set_period(TIM2, 65535); // Overflow frequency of ~275Hz, period = 65535 +1
 	TIM2_ARR = 65535;
-    TIM2_CR1 |= TIM_CR1_URS; // only trigger update interrupt upon overflow
-    TIM2_DIER |= TIM_DIER_UIE; // UIE: update interrupt enable
-    TIM2_EGR |= TIM_EGR_UG; // lock in timer settings
+    TIM2_CR1 |= (1 << 2); // only trigger update interrupt upon overflow
+    TIM2_DIER |= (1 << 0); // UIE: update interrupt enable
+    TIM2_EGR |= (1 << 0); // lock in timer settings
     // Enable counter:
-    TIM2_CR1 |= TIM_CR1_CEN;
+    TIM2_CR1 |= (1 << 0);
 
     /* Enable TIM2 interrupt. */
 	// nvic_enable_irq(NVIC_TIM2_IRQ);
@@ -24,10 +24,10 @@ void timing_init_hardware(void)
 // volatile uint16_t overflow_count = 0;
 void tim2_isr(void)
 {
-    if(TIM2_SR & TIM_SR_UIF)
+    if(TIM2_SR & (1 << 0))
     { // update event triggered interrupt
 	// Clear update event flag:
-        TIM2_SR &= ~TIM_SR_UIF;
+        TIM2_SR &= ~(1 << 0);
 
 		for(uint8_t i = 0; i < _num_overflow_counters; ++i)
 		{

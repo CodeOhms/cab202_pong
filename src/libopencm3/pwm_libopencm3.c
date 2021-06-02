@@ -8,13 +8,13 @@ void pwm_init(void)
     GPIOB_CRH |= (2 << 6)|(2 << 4);
 
     // Output compare enable:
-    TIM4_CCER |= TIM_CCER_CC4E;
+    TIM4_CCER |= (1 << 12);
     // Enable auto-reload preload register:
-    TIM4_CR1 |= TIM_CR1_ARPE;
+    TIM4_CR1 |= (1 << 7);
     // Choose pwm mode 1:
-    TIM4_CCMR2 |= TIM_CCMR2_OC4M_PWM1;
+    TIM4_CCMR2 |= (0x6 << 12);
     // Output compare preload enable:
-    TIM4_CCMR2 |= TIM_CCMR2_OC4PE;
+    TIM4_CCMR2 |= (1 << 11);
     // Set prescaler:
     TIM4_PSC = 3; // actually 4, hidden +1
     // Set maximum pwm value:
@@ -22,9 +22,9 @@ void pwm_init(void)
     // Initialise duty cycle to 0%:
     TIM4_CCR2 = 0;
     // Lock in timer settings
-    TIM4_EGR |= TIM_EGR_UG;
+    TIM4_EGR |= (1 << 0);
     // Enable counter:
-    TIM4_CR1 |= TIM_CR1_CEN;
+    TIM4_CR1 |= (1 << 0);
 }
 
 void pwm_set_duty_cycle(float duty_cycle)

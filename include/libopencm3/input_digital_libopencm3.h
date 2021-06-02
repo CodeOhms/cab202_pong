@@ -1,8 +1,8 @@
 #ifndef  INPUT_DIGITAL_LIBOPENCM3_H
 #define  INPUT_DIGITAL_LIBOPENCM3_H
 
-#include <libopencm3/stm32/rcc.h>
-#include <libopencm3/stm32/gpio.h>
+// #include <libopencm3/stm32/rcc.h>
+// #include <libopencm3/stm32/gpio.h>
 
 #include "common.h"
 

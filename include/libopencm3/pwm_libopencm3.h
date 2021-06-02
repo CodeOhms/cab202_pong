@@ -1,8 +1,9 @@
 #ifndef  PWM_LIBOPENCM3_H
 #define  PWM_LIBOPENCM3_H
 
-#include <libopencm3/stm32/gpio.h>
-#include <libopencm3/stm32/timer.h>
+// #include <libopencm3/stm32/gpio.h>
+// #include <libopencm3/stm32/timer.h>
+#include "common.h"
 
 void pwm_init(void);
 

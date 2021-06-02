@@ -12,7 +12,7 @@ static void input_analogue_adc_init(void)
 {
 	// Ensure the ADC is off to change the values:
 	// adc_power_off(ADC1);
-	ADC1_CR2 &= ~ADC_CR2_ADON;
+	ADC1_CR2 &= ~(1 << 0);
 
 	// Set prescaler, ADC clock must no exceed 14 MHz:
 	// rcc_set_adcpre(RCC_CFGR_ADCPRE_PCLK2_DIV8);
